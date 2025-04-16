@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: message_service_postgres_container
+    environment:
+      POSTGRES_USER: minhduc8a2
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: message_service_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - message_service_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  message_service_postgres_data:
+   
