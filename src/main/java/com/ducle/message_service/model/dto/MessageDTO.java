@@ -15,7 +15,7 @@ public record MessageDTO(
         @NotNull @Min(1) Long roomId,
         @NotBlank String content,
         MessageType type,
-        Instant timestamp
+        Instant createdAt
 
 ) implements Serializable {
 
