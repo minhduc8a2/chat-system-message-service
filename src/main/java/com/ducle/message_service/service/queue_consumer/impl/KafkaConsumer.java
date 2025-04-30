@@ -17,7 +17,7 @@ public class KafkaConsumer implements QueueConsumer {
     private final MessageService messageService;
 
     @Override
-    @KafkaListener(topics = "${kafka-config.topic-name}", groupId = "chat-group", containerFactory = "messageKafkaListenerFactory")
+    @KafkaListener(topics = "${kafka-config.topic-name}", groupId = "${spring.kafka.consumer.group-id}", containerFactory = "messageKafkaListenerFactory")
     public void consume(MessageDTO message) {
         log.info("Message consumed: {}", message);
         messageService.saveMessage(message);

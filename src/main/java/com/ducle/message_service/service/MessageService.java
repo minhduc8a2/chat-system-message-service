@@ -19,8 +19,6 @@ public class MessageService {
 
     public void saveMessage(MessageDTO messageDTO) {
         Message message = messageMapper.toMessage(messageDTO);
-       
-      
         messageRepository.save(message);
     }
 }
