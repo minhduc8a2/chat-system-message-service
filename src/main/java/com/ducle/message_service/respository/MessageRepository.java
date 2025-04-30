@@ -14,4 +14,9 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllAfterMessageIdByRoom(@Param("roomId") Long roomId,
             @Param("lastMessageId") Long lastMessageId,
             Pageable pageable);
+
+    @Query("SELECT m FROM Message m WHERE m.roomId = :roomId AND m.id < :lastMessageId ORDER BY m.id ASC")
+    List<Message> findAllBeforeMessageIdByRoom(@Param("roomId") Long roomId,
+            @Param("lastMessageId") Long lastMessageId,
+            Pageable pageable);
 }
