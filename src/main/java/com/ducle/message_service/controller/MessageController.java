@@ -22,7 +22,7 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @GetMapping("/rooms/{chatRoomId}/last_message_id/{messageId}")
+    @GetMapping("/rooms/{chatRoomId}/last_read_message_id/{messageId}")
     public ResponseEntity<List<MessageDTO>> getMethodName(@Min(1) @PathVariable Long chatRoomId,
             @Min(1) @PathVariable Long messageId) {
         return ResponseEntity.ok(messageService.getMessagesByLastMessageId(chatRoomId, messageId));
