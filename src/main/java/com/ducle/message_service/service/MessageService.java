@@ -1,5 +1,6 @@
 package com.ducle.message_service.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
+    private final ChatServiceClient chatServiceClient;
 
     public void saveMessage(MessageDTO messageDTO) {
         Message message = messageMapper.toMessage(messageDTO);
@@ -53,6 +55,28 @@ public class MessageService {
                 .map(messageMapper::toMessageDTO)
                 .toList();
 
-        return new InfiniteScrollResult<>(dtoList, hasMore);
+        return new InfiniteScrollResult<>(dtoList, type.equals(InfiniteLoadType.TOP) && hasMore,
+                type.equals(InfiniteLoadType.BOTTOM) && hasMore);
+    }
+
+    public InfiniteScrollResult<MessageDTO> getMessagesByRoomLastSeen(Long chatRoomId, Long userId) {
+
+        final int SIZE = 20;
+        Pageable pageable = PageRequest.of(0, SIZE + 1);
+        Instant roomLastSeen = chatServiceClient.getRoomLastSeenTimeStamp(chatRoomId, userId);
+        boolean hasMoreOnTop = messageRepository.existsBeforeTimeStampByCreatedAt(chatRoomId, roomLastSeen);
+        List<Message> messages = messageRepository.findAllAfterTimeStampByCreatedAt(chatRoomId, roomLastSeen, pageable);
+
+        boolean hasMoreBottom = messages.size() > SIZE;
+
+        if (hasMoreBottom) {
+            messages = messages.subList(0, SIZE); // Trim the extra one
+        }
+
+        List<MessageDTO> dtoList = messages.stream()
+                .map(messageMapper::toMessageDTO)
+                .toList();
+
+        return new InfiniteScrollResult<>(dtoList, hasMoreOnTop, hasMoreBottom);
     }
 }
