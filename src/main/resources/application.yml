@@ -30,3 +30,8 @@ server:
 kafka-config:
   topic-name: chat-messages
 
+
+api:
+    version: v1
+    base-url: /api/${api.version}
+    messages-url: ${api.base-url}/messages
