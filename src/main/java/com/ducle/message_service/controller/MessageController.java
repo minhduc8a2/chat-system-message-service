@@ -8,6 +8,7 @@ import com.ducle.message_service.model.dto.InfiniteScrollResult;
 import com.ducle.message_service.model.dto.MessageDTO;
 import com.ducle.message_service.service.MessageService;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class MessageController {
 
     @GetMapping
     public ResponseEntity<InfiniteScrollResult<MessageDTO>> getInfiniteMessages(@Min(1) @RequestParam Long chatRoomId,
-            @Min(1) @RequestParam Long messageId, @NotBlank String type) {
+            @Nullable @RequestParam Long messageId, @NotBlank String type) {
         return ResponseEntity.ok(messageService.getMessagesByLastMessageId(chatRoomId, messageId, type));
     }
 

@@ -41,9 +41,15 @@ public class MessageService {
         }
         final int SIZE = 20;
         Pageable pageable = PageRequest.of(0, SIZE + 1);
-        List<Message> messages = type.equals(InfiniteLoadType.BOTTOM)
-                ? messageRepository.findAllAfterMessageIdByRoom(chatRoomId, lastMessageId, pageable)
-                : messageRepository.findAllBeforeMessageIdByRoom(chatRoomId, lastMessageId, pageable);
+        List<Message> messages;
+        
+        if (lastMessageId == null) {
+            messages = messageRepository.findLatestMessagesByRoom(chatRoomId, pageable).reversed();
+        } else if (type.equals(InfiniteLoadType.BOTTOM)) {
+            messages = messageRepository.findAllAfterMessageIdByRoom(chatRoomId, lastMessageId, pageable);
+        } else {
+            messages = messageRepository.findAllBeforeMessageIdByRoom(chatRoomId, lastMessageId, pageable);
+        }
 
         boolean hasMore = messages.size() > SIZE;
 

@@ -30,4 +30,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
         Boolean existsBeforeTimeStampByCreatedAt(@Param("roomId") Long roomId,
                         @Param("lastSeen") Instant lastSeen);
 
+        @Query("SELECT m FROM Message m WHERE m.roomId = :roomId ORDER BY m.id DESC")
+        List<Message> findLatestMessagesByRoom(@Param("roomId") Long roomId, Pageable pageable);
 }
