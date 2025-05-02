@@ -1,45 +1,8 @@
+server:
+  port: 8085
 spring:
   application:
     name: message-service
-  datasource:
-    url: jdbc:postgresql://localhost:5434/message_service_db
-    username: minhduc8a2
-    password: 123456
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-  cloud:
-    config:
-      enabled: false
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  kafka:
-    bootstrap-servers: http://localhost:9092
-    consumer:
-      group-id: message-service-group
-
-server:
-  port: 8085
-
-kafka-config:
-  topic-name: chat-messages
-
-api:
-  version: v1
-  base-url: /api/${api.version}
-  messages-url: ${api.base-url}/messages
-
-chat-service:
-  name: "CHAT-SERVICE"
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+  config:
+    import: configserver:http://localhost:8080
